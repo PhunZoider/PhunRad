@@ -2,6 +2,7 @@ if not isServer() then
     return
 end
 local PR = PhunRad
-
-NUCServerVarsLocal.WriteFalloutzoneFileDone = true
+if NUCServerVarsLocal then
+    NUCServerVarsLocal.WriteFalloutzoneFileDone = true
+end
 

@@ -50,7 +50,9 @@ module PhunRad
         Tooltip = Tooltip_Item_Iodine,
         StaticModel = PillBottle,
         WorldStaticModel = Iodine,
-        Medical = TRUE
+        Medical = TRUE,
+        DaysTotallyRotten   = 4,
+        DaysFresh           = 1,
     }
 
 }

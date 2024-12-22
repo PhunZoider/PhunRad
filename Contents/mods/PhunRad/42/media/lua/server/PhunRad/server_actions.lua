@@ -1,4 +1,4 @@
-if isClient() then
+if not isClient() then
     return
 end
 local PR = PhunRad
@@ -11,6 +11,6 @@ function OnEat_Iodine(food, player, percentage)
     end
 
     local pd = player:getModData().PhunRad
-    pd.iodineExp = gt:getWorldAgeHours() + 5
+    pd.iodineExp = gt:getWorldAgeHours() + (PR.settings.IodineHours or 5)
 
 end

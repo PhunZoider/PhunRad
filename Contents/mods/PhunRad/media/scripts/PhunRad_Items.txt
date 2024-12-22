@@ -18,7 +18,6 @@ module PhunRad
         AttachmentType = Walkie,
         Tooltip = Tooltip_item_geiger,
         StaticModel     = WalkieTalkieValue,
-        WorldStaticModel = Geiger,
         ticksPerEquipUse = 6000,
     }
 
@@ -35,7 +34,6 @@ module PhunRad
         AttachmentType = Walkie,
         Tooltip = Tooltip_item_geiger,
         StaticModel     = WalkieTalkieValue,
-        WorldStaticModel = GeigerBroken,
         ticksPerEquipUse = 6000,
     }
 
@@ -49,7 +47,6 @@ module PhunRad
         Icon    =   Iodine,
         Tooltip = Tooltip_Item_Iodine,
         StaticModel = PillBottle,
-        WorldStaticModel = Iodine,
         Medical = TRUE,
         DaysTotallyRotten   = 4,
         DaysFresh           = 1,

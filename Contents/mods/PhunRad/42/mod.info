@@ -1,5 +1,6 @@
 title=PhunRad
 name=PhunRad
-id=PhunRadX
+id=phunrad
+requires=phunzones
 description=Phun with Radiation
 poster=poster.png

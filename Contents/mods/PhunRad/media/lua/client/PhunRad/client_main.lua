@@ -13,7 +13,7 @@ function PR:getPlayerData(player)
 end
 
 function PR:updatePlayerZone(player, zone)
-
+    print("[[[[ Updating player zone ]]]]")
     local pd = self:getPlayerData(player)
 
     local radLevel = zone.rads or 0
@@ -66,12 +66,35 @@ function PR:updatePlayer(player)
     if change <= 0 then
         rads = rads - self.settings.RadsRecoveryPerMin
     end
-    if currentLevel > 80 then
+
+    if rads < 0 then
+        rads = 0
+    elseif rads > self.settings.MaxRads then
+        rads = self.settings.MaxRads
+        player:getBodyDamage():setFoodSicknessLevel(100)
+    end
+
+    if rads > 0 then
+        pd.percent = rads / self.settings.MaxRads
+    else
+        pd.percent = 0
+    end
+    player:getBodyDamage():setFoodSicknessLevel((pd.percent * 100))
+
+    if currentLevel > 49 then
         pd.rate = 3
-    elseif currentLevel > 50 then
+    elseif currentLevel > 24 then
         pd.rate = 2
-    elseif currentLevel > 10 then
+    elseif currentLevel > 9 then
         pd.rate = 1
+    elseif currentLevel < -50 then
+        pd.rate = -3
+    elseif currentLevel < -35 then
+        pd.rate = -2
+    elseif currentLevel < -15 then
+        pd.rate = -1
+    else
+        pd.rate = 0
     end
 
     pd.rads = rads

@@ -1,4 +1,4 @@
-if isServer() then
+if not isClient() then
     return
 end
 local PR = PhunRad
@@ -14,7 +14,7 @@ function OnEat_Iodine(food, player, percentage)
     if (pd.iodineExp or 0) then
         pd.iodineExp = gt:getWorldAgeHours()
     end
-    pd.iodineExp = pd.iodineExp + 5
+    pd.iodineExp = pd.iodineExp + (PR.settings.IodineHours or 5)
 
 end
 
@@ -28,5 +28,5 @@ function IodineTake(items, result, player)
     if (pd.iodineExp or 0) then
         pd.iodineExp = gt:getWorldAgeHours()
     end
-    pd.iodineExp = pd.iodineExp + 5
+    pd.iodineExp = pd.iodineExp + (PR.settings.IodineHours or 5)
 end

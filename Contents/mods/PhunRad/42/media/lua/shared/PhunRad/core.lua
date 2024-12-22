@@ -1,7 +1,9 @@
 PhunRad = {
     inied = false,
     name = "PhunRad",
-    commands = {},
+    commands = {
+        setPlayerRadLevel = "PhunRad.setPlayerRadLevel"
+    },
     events = {},
     data = {},
     settings = {}

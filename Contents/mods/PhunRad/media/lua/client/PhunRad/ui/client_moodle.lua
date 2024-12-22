@@ -42,35 +42,38 @@ local radMapping = {{
 }}
 
 PR.moodles = {}
+local inied = {}
 function PR.moodles:getRadsMoodle(player)
-    return mf.getMoodle(PR.name, player and player:getPlayerNum())
+
+    local moodle = mf.getMoodle(PR.name, player and player:getPlayerNum())
+
+    if not inied[tostring(player)] then
+
+        moodle:setThresholds(0.1, 0.4, 0.6, 0.99, 1.1, 1.1, 1.1, 1.1) -- dont show till 99% and its bad?
+        inied[tostring(player)] = true
+    end
+
+    return moodle
 end
 
 function PR.moodles:updateRadMoodle(player, data)
 
     local pd = data or player:getModData().PhunRad or {}
-    local moodle = mf.getMoodle(PR.name, player and player:getPlayerNum())
-
-    if pd.rads < 0 then
-        pd.rads = 0
+    local moodle = self:getRadsMoodle(player)
+    if not moodle then
+        return
     end
 
-    if pd.rads > 100 then
-        moodle:setValue(.2)
-    elseif pd.rads > 50 then
-        moodle:setValue(.30)
-    elseif pd.rads > 10 then
-        moodle:setValue(.5)
-    else
-        moodle:setValue(0)
-    end
+    local value = 1 - data.percent
 
-    if pd.rate then
-        if pd.rate > 0 then
-            moodle:setChevronCount(pd.rate)
-            moodle:setChevronIsUp(true)
-        elseif pd.rate < 0 then
-            moodle:setChevronCount(math.abs(pd.rate))
+    moodle:setValue(value)
+
+    if data.rate then
+        if data.rate > 0 then
+            moodle:setChevronCount(data.rate)
+            moodle:setChevronIsUp(data.rate > 0)
+        elseif data.rate < 0 then
+            moodle:setChevronCount(math.abs(data.rate))
             moodle:setChevronIsUp(false)
         else
             moodle:setChevronCount(0)
@@ -89,7 +92,11 @@ function PR.moodles:updateRadMoodle(player, data)
             txt = txt .. "\nIodine expires in " .. PhunTools:formatWholeNumber(expin) .. " hours"
         end
     end
-    moodle:setDescription(moodle:getGoodBadNeutral(), moodle:getLevel(), txt)
-    moodle.disable = not ((pd.rads or 0) > 0 or (pd.rate or 0) > 0)
+    local gb = moodle:getGoodBadNeutral()
+    local lvl = moodle:getLevel()
+    moodle:setDescription(gb, lvl, txt)
+    local disable = value > .999 or (not ((pd.rads or 0) > 0 or (pd.rate or 0) > 0))
+    -- print("Disable: " .. tostring(disable) .. " at " .. tostring(1 - data.percent) .. " value=" .. tostring(value))
+    -- moodle.disable = disable
 end
 
