@@ -1,0 +1,69 @@
+VERSION = 1,
+
+option PhunRad.WipeMap
+{
+    type = boolean, 
+    default = true,
+    page=PhunRad,
+    translation = PhunRadWipeMap
+}
+
+option PhunRad.IodineHours
+{
+    type = integer, 
+    default = 5, 
+    min = 0,
+    max = 100,
+    page=PhunRad,
+    translation = PhunRadIodineHours
+}
+
+option PhunRad.IodineStrength
+{
+    type = integer, 
+    default = 50, 
+    min = 0,
+    max = 100,
+    page=PhunRad,
+    translation = PhunRadIodineHours
+}
+
+option PhunRad.RadsPerMin
+{
+    type = integer, 
+    default = 10, 
+    min = 0,
+    max = 100,
+    page=PhunRad,
+    translation = PhunRadRadsPerMin
+}
+
+option PhunRad.RadsRecoveryPerMin
+{
+    type = integer, 
+    default = 10, 
+    min = 0,
+    max = 100,
+    page=PhunRad,
+    translation = PhunRadRadsPerMin
+}
+
+option PhunRad.LevelToAddSickness
+{
+    type = integer, 
+    default = 50, 
+    min = 0,
+    max = 99999,
+    page=PhunRad,
+    translation = PhunRadRadsPerMin
+}
+
+option PhunRad.SicknessRate
+{
+    type = integer, 
+    default = 1, 
+    min = 0,
+    max = 99999,
+    page=PhunRad,
+    translation = PhunRadRadsPerMin
+}

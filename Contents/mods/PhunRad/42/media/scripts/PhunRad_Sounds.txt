@@ -1,0 +1,38 @@
+module Base
+{
+	sound PhunRad_GeigerLow
+	{
+        category = Player,
+		loop = true, 
+		is3D = true,
+        clip { 
+			file = media/sound/geigerlow.ogg, 
+			distanceMax = 20, 
+			volume = 0.3f 
+		}
+	}
+
+    sound PhunRad_GeigerMed
+	{
+        category = Player,
+		loop = true, 
+		is3D = true,
+        clip { 
+			file = media/sound/geigermed.ogg, 
+			distanceMax = 20, 
+			volume = 0.3f 
+		}
+	}
+
+    sound PhunRad_Geiger
+	{
+        category = Player,
+		loop = true, 
+		is3D = true,
+        clip { 
+			file = media/sound/geiger.ogg, 
+			distanceMax = 20, 
+			volume = 0.3f 
+		}
+	}
+}
