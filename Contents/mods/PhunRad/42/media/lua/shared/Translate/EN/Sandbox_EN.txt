@@ -1,7 +1,0 @@
-Sandbox_EN = {
-    Sandbox_PhunRad = "PhunRad"
-
-    Sandbox_WipeKey = "Wipe Key"
-    Sandbox_WipeKey_tooltip = "If the player hasn't stored this key yet, it will reset their map"
-
-}

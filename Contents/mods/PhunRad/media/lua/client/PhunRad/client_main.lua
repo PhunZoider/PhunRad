@@ -1,4 +1,4 @@
-if not isClient() then
+if isServer() then
     return
 end
 local PR = PhunRad
@@ -12,37 +12,39 @@ function PR:getPlayerData(player)
     return data.PhunRad
 end
 
-function PR:updatePlayerZone(player, zone)
-    print("[[[[ Updating player zone ]]]]")
+function PR:updatePlayerRadLevel(player, radLevel)
+
     local pd = self:getPlayerData(player)
+    pd.radLevel = radLevel or 0
+    self:updatePlayer(player)
 
-    local radLevel = zone.rads or 0
+end
 
-    if pd.playing and radLevel == 0 then
+function PR:updateGeigerCounterSound(player)
+
+    local data = self:getPlayerData(player)
+
+    if data.playing and (data.radLevel == 0 or data.activeGeiger ~= true) then
         -- geiger sound was playing so stop it
-        self:stopSound(player, pd.playing)
-        pd.playing = nil
-
-    elseif radLevel > 0 then
+        self:stopSound(player, data.playing)
+        data.playing = nil
+    elseif (data.radLevel or 0) > 0 and data.activeGeiger == true then
         -- wasn't playing, but rad level says it should be
         local sound = ""
-        if radLevel < 30 then
+        if data.radLevel < 30 then
             sound = "PhunRad_GeigerLow"
-        elseif radLevel < 60 then
+        elseif data.radLevel < 60 then
             sound = "PhunRad_GeigerMed"
         else
             sound = "PhunRad_Geiger"
         end
-        if pd.playing ~= sound then
-            if pd.playing then
-                self:stopSound(player, pd.playing)
+        if data.playing ~= sound then
+            if data.playing then
+                self:stopSound(player, data.playing)
             end
-            pd.playing = self:playSound(player, sound)
+            data.playing = self:playSound(player, sound)
         end
     end
-
-    pd.radLevel = radLevel
-    self:updatePlayer(player)
 end
 
 function PR:updatePlayer(player)
@@ -51,15 +53,40 @@ function PR:updatePlayer(player)
         gt = GameTime:getInstance()
     end
 
-    local pd = self:getPlayerData(player)
-    local lastLevel = pd.lastLevel or 0
-    local currentLevel = pd.radLevel or 0
-    local rads = pd.rads or 0
+    local data = self:getPlayerData(player)
+    local lastLevel = data.lastLevel or 0 -- last strength of radiation affecting player
+    local currentLevel = data.radLevel or 0 -- strength of radiation affecting player
+    local rads = data.rads or 0 -- total accumulated rads
+
+    if currentLevel > 0 then
+        -- in radiated area. check for geiger counter
+        local items = player:getInventory():getItemsFromType("GeigerCounter", true)
+        for i = 0, items:size() - 1 do
+            local item = items:get(i)
+            local isActivated = item:isActivated()
+            if isActivated then
+                -- item:Use()
+                if not self.settings.GeigerMustBeEquippedToHear or (item:isEquipped() or item:getAttachedSlot() > 0) then
+                    data.activeGeiger = true
+                    break
+                end
+
+            end
+        end
+    end
+
+    self:updateGeigerCounterSound(player)
 
     local adjustedLevel = currentLevel
-    if pd.iodineExp then
+
+    local radItems, itemRadAdj = self:getRadioactiveItems(player)
+    adjustedLevel = adjustedLevel + itemRadAdj
+
+    if data.iodineExp then
         adjustedLevel = currentLevel - self.settings.IodineStrength
     end
+    adjustedLevel = adjustedLevel - (data.clothingProtection or 0)
+    local items = player:getWornItems()
 
     local change = adjustedLevel * (self.settings.RadsPerMin * .01)
     rads = rads + change
@@ -75,40 +102,40 @@ function PR:updatePlayer(player)
     end
 
     if rads > 0 then
-        pd.percent = rads / self.settings.MaxRads
+        data.percent = rads / self.settings.MaxRads
     else
-        pd.percent = 0
+        data.percent = 0
     end
-    player:getBodyDamage():setFoodSicknessLevel((pd.percent * 100))
+    player:getBodyDamage():setFoodSicknessLevel((data.percent * 100))
 
     if currentLevel > 49 then
-        pd.rate = 3
+        data.rate = 3
     elseif currentLevel > 24 then
-        pd.rate = 2
+        data.rate = 2
     elseif currentLevel > 9 then
-        pd.rate = 1
+        data.rate = 1
     elseif currentLevel < -50 then
-        pd.rate = -3
+        data.rate = -3
     elseif currentLevel < -35 then
-        pd.rate = -2
+        data.rate = -2
     elseif currentLevel < -15 then
-        pd.rate = -1
+        data.rate = -1
     else
-        pd.rate = 0
+        data.rate = 0
     end
 
-    pd.rads = rads
-    pd.lastLevel = currentLevel
+    data.rads = rads
+    data.lastLevel = currentLevel
 
-    if pd.iodineExp and pd.iodineExp < gt:getWorldAgeHours() then
-        print("Iodine Expired")
-        pd.iodineExp = nil
+    if data.iodineExp and data.iodineExp < gt:getWorldAgeHours() then
+        data.iodineExp = nil
     end
 
-    self.moodles:updateRadMoodle(player, pd)
+    self.moodles:updateRadMoodle(player, data)
 
 end
 
+-- local cache
 local playerSounds = {}
 
 function PR:playSound(player, sound)
@@ -116,7 +143,6 @@ function PR:playSound(player, sound)
     local name = player:getUsername()
 
     if playerSounds[name] == nil then
-        print("Playing sound: " .. sound)
         player:playSoundLocal(sound)
         playerSounds[name] = sound
     elseif playerSounds[name] ~= nil and not player:getEmitter():isPlaying(sound) then

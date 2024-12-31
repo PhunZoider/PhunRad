@@ -1,0 +1,5 @@
+Tooltip_EN = {
+	Tooltip_Item_Geiger = "Equip and turn on to detect levels of radiation around you",
+	Tooltip_Broken_Item_Geiger = "Repair to detect levels of radiation around you",
+	Tooltip_Item_Iodine = "Consume to provide temporary protection from radiation.",
+}

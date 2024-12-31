@@ -1,30 +1,20 @@
-if not isClient() then
+if isServer() then
     return
 end
 local Commands = require "PhunRad/client_commands"
 local PR = PhunRad
 local PZ = PhunZones
 Events[PZ.events.OnPhunZonesPlayerLocationChanged].Add(function(player, zone)
-    PR:updatePlayerZone(player, zone)
+    local radLevel = zone and zone.rads or 0
+    local previousRadLevel = PR:getPlayerData(player).radLevel or 0
+    if zone and zone.isVoid then
+        -- lets not let them espcape by running into RV!
+        PR:updatePlayerRadLevel(player, previousRadLevel)
+    else
+        PR:updatePlayerRadLevel(player, radLevel)
+    end
+
 end)
-
--- Events.OnCreatePlayer.Add(function(playerIndex)
-
---     print("[[[[ OnCreatePlayer ]]]]")
---     -- trigger the initial setup (eg they login to area with rads)
---     local player = getSpecificPlayer(playerIndex)
---     local data = PR:getPlayerData(player)
---     if data then
---         if data.playing then
---             data.playing = false
---         end
-
---         PR:updatePlayerZone(player, {
---             rads = data.radLevel
---         })
---     end
-
--- end)
 
 Events.EveryOneMinute.Add(function()
     for i = 0, getOnlinePlayers():size() - 1 do
@@ -40,11 +30,10 @@ Events.OnPreFillWorldObjectContextMenu.Add(function(playerNum, context, worldobj
     if isAdmin() or isDebugEnabled() then
         local player = playerNum and getSpecificPlayer(playerNum) or getPlayer()
         local data = PR:getPlayerData(player)
-        local adminOption = context:addOption("PhunRad:" .. tostring(data.radLevel or 0) .. "/" ..
-                                                  tostring(data.rads or 0), worldobjects, nil)
+        local adminOption = context:addOption("PhunRad", worldobjects, nil)
         local adminSubMenu = ISContextMenu:getNew(context)
         local targetPlayer = player
-        for _, wObj in ipairs(worldobjects) do -- find object to interact with; code support for controllers
+        for _, wObj in ipairs(worldobjects) do
             local square = wObj:getSquare()
             for i = square:getMovingObjects():size(), 1, -1 do
                 if instanceof(square:getMovingObjects():get(i - 1), "IsoPlayer") then
@@ -54,24 +43,20 @@ Events.OnPreFillWorldObjectContextMenu.Add(function(playerNum, context, worldobj
             end
         end
 
-        adminSubMenu:addOption("Remove rads from " .. targetPlayer:getUsername(), player, function()
+        adminSubMenu:addOption(getText("IGUI_PhunRad_RemovePlayerRads", targetPlayer:getUsername(),
+            tostring(data.radLevel or 0), tostring(data.rads or 0)), player, function()
             sendClientCommand(PR.name, PR.commands.setPlayerRadLevel, {targetPlayer:getUsername(), 0, false})
         end)
         context:addSubMenu(adminOption, adminSubMenu)
-        -- local item = items:get(0)
-        -- if item:getType() == "GeigerCounter" then
-        --     local option = context:addOption("Set Geiger Counter to 0", item, PR.OnCreate.GeigerBatteriesInsert, playerObj)
-        --     local option = context:addOption("Set Geiger Counter to 100", item, PR.OnCreate.GeigerBatteriesInsert, playerObj)
-        --     local option = context:addOption("Set Geiger Counter to 200", item, PR.OnCreate.GeigerBatteriesInsert, playerObj)
-        --     local option = context:addOption("Set Geiger Counter to 300", item, PR.OnCreate.GeigerBatteriesInsert, playerObj)
-        --     local option = context:addOption("Set Geiger Counter to 400", item, PR.OnCreate.GeigerBatteriesInsert, playerObj)
-        --     local option = context:addOption("Set Geiger Counter to 500", item, PR.OnCreate.GeigerBatteriesInsert, playerObj)
-        --     local option = context:addOption("Set Geiger Counter to 600", item, PR.OnCreate.GeigerBatteriesInsert, playerObj)
-        --     local option = context:addOption("Set Geiger Counter to 700", item, PR.OnCreate.GeigerBatteriesInsert, playerObj)
-        --     local option = context:addOption("Set Geiger Counter to 800", item, PR.OnCreate.GeigerBatteriesInsert, playerObj)
-        --     local option = context:addOption("Set Geiger Counter to 900", item, PR.OnCreate.GeigerBatteriesInsert, playerObj)
-        --     local option = context:addOption("Set Geiger Counter to 1000", item, PR.OnCreate.GeigerBatteriesInsert, playerObj)
-        -- end
+    end
+end)
+
+Events.OnRefreshInventoryWindowContainers.Add(function(invSelf, state)
+    if state == "end" then
+        -- update last inventory update time because inventory around player has changed
+        local playerObj = getSpecificPlayer(invSelf.player)
+        local data = PR:getPlayerData(playerObj)
+        data.invUpdated = getTimestamp()
     end
 end)
 
@@ -92,13 +77,48 @@ local function setup()
                 if data.playing then
                     data.playing = false
                 end
-
-                PR:updatePlayerZone(p, {
-                    rads = data.radLevel
-                })
+                PR:updatePlayersClothingProtection(p)
+                PR:updatePlayerRadLevel(p, data.radLevel)
             end
         end
     end
 end
 
 Events.OnTick.Add(setup)
+
+Events.OnClothingUpdated.Add(function(player)
+    print("=> OnClothingUpdated ", tostring(player))
+    if player:isLocalPlayer() then
+        PR:updatePlayersClothingProtection(player)
+        PR:updatePlayer(player)
+    end
+end)
+
+-- Events.OnRefreshInventoryWindowContainers.Add(function(invSelf, state)
+-- 	local playerObj = getSpecificPlayer(invSelf.player)
+-- 	self:getRadioactiveItems(playerObj)
+-- end)
+
+Events.OnRainStart.Add(function(a, b, c)
+    print("=> OnRainStart ", tostring(a), tostring(b), tostring(c))
+end)
+
+Events.OnRainStop.Add(function(a, b, c)
+    print("=> OnRainStop ", tostring(a), tostring(b), tostring(c))
+end)
+
+Events.OnWeatherPeriodStart.Add(function(a, b, c)
+    print("=> OnWeatherPeriodStart ", tostring(a), tostring(b), tostring(c))
+end)
+
+Events.OnWeatherPeriodStop.Add(function(a, b, c)
+    print("=> OnWeatherPeriodStop ", tostring(a), tostring(b), tostring(c))
+end)
+
+Events.OnChangeWeather.Add(function(a, b, c)
+    print("=> OnChangeWeather ", tostring(a), tostring(b), tostring(c))
+end)
+
+Events.OnRadioInteraction.Add(function(a, b, c)
+    print("=> OnRadioInteraction ", tostring(a), tostring(b), tostring(c))
+end)

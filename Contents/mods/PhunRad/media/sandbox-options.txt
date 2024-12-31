@@ -20,6 +20,26 @@ option PhunRad.IodineStrength
     translation = PhunRadIodineHours
 }
 
+option PhunRad.HazmatStrength
+{
+    type = integer, 
+    default = 100, 
+    min = 0,
+    max = 100,
+    page=PhunRad,
+    translation = PhunRadHazmatStrength
+}
+
+option PhunRad.HazmatStrengthLossPerHole
+{
+    type = integer, 
+    default = 20, 
+    min = 0,
+    max = 100,
+    page=PhunRad,
+    translation = PhunRadHazmatStrengthLossPerHole
+}
+
 option PhunRad.RadsPerMin
 {
     type = integer, 
@@ -48,4 +68,12 @@ option PhunRad.MaxRads
     max = 99999,
     page=PhunRad,
     translation = PhunRadRadsMaxRads
+}
+
+option PhunRad.GeigerMustBeEquippedToHear
+{
+    type = boolean,
+    default = true,
+    page = PhunRad,
+    translation = PhunRadGeigerMustBeEquippedToHear,
 }

@@ -8,34 +8,67 @@ module PhunRad {
 	recipe Fix Broken Geiger Counter
     {
         destroy BrokenGeigerCounter,
-        keep [Recipe.GetItemTypes.Screwdriver],
-        Base.MetalBar = 10,
-        Base.SmallSheetMetal = 15,
+       destroy ElectronicsScrap=2,
+       destroy ElectricWire=3,
+       destroy LightBulb,
+       destroy Aluminum=2,
+       destroy Battery,
+       keep [Recipe.GetItemTypes.Screwdriver],
+
+       NoBrokenItems:true,        
+
         Result:GeigerCounter,
         Time:200.0,
         SkillRequired:Electricity=3,
-        Category:Electrical
+        Category:Electrical,
+        AnimNode:Disassemble,
+       Prop1:Screwdriver,
+       Sound:Dismantle,
     }
 
-	recipe Insert Batteries Into Geiger Counter
+    recipe Dismantle Geiger Counter
+    {
+       destroy PhunRad.GeigerCounter,
+       keep [Recipe.GetItemTypes.Screwdriver],
+
+       NoBrokenItems:true,
+       Result:ElectronicsScrap,
+       Time:100.0,
+       OnCreate:Recipe.OnCreate.DismantleLantern,
+       OnGiveXP:Recipe.OnGiveXP.DismantleRadio,
+       Category:Electrical,
+       AnimNode:Disassemble,
+       Prop1:Screwdriver,
+       Sound:Dismantle,
+    }
+
+	recipe Insert Battery
     {
         destroy GeigerCounter,
-        destroy Battery = 4,
+        destroy Battery,
+
         Result:GeigerCounter,
-        Time:200.0,
+		Time:30,
+		OnTest:Recipe.OnTest.GeigerBatteriesInsert,
+		OnCreate:Recipe.OnCreate.GeigerBatteriesInsert,
+		StopOnWalk:false,
         Category:Electrical,
-        OnTest:PhunRad.OnTest.GeigerBatteriesInsert,
-        OnCreate:PhunRad.OnCreate.GeigerBatteriesInsert,
+        Time:200.0,
+        
     }
 
-    recipe Remove Batteries From Geiger Counter
+    recipe Remove Battery From Geiger Counter
     {
-        keep GeigerCounter,
-        Result:Battery,
-        Time:200.0,
-        Category:Electrical,
-        OnTest:PhunRad.OnTest.GeigerBatteriesRemove,
-        OnCreate:PhunRad.OnCreate.GeigerBatteriesRemove,
+
+		keep GeigerCounter,
+
+		Result:Battery,
+		Time:30,
+		OnTest:Recipe.OnTest.GeigerBatteriesRemove,
+		OnCreate:Recipe.OnCreate.GeigerBatteriesRemove,
+		StopOnWalk:false,
+
+
     }
 
     recipe Take Iodine
@@ -46,4 +79,5 @@ module PhunRad {
 		Time:30.0,
 		OnCreate:IodineTake,
 	}
+
 }

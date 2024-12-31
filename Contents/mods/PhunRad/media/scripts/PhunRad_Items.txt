@@ -10,21 +10,25 @@ module PhunRad
         DisplayCategory = Electronics,
         Weight  =   0.3,
         Type    =   Drainable,
-        UseWhileEquipped	=	TRUE,
         ActivatedItem	=	TRUE,
         KeepOnDeplete = TRUE,
         DisplayName =   Geiger Counter,
+        UsesBattery		= TRUE,
+        UseWorldItem 	= 	TRUE,
         Icon            = Geiger,
         AttachmentType = Walkie,
-        Tooltip = Tooltip_item_geiger,
+        Tooltip = Tooltip_Item_Geiger,
+        IsPortable		= TRUE,
         StaticModel     = WalkieTalkieValue,
         ticksPerEquipUse = 6000,
+        cantBeConsolided = TRUE,
+        UseDelta			=	0.001,
     }
 
     item BrokenGeigerCounter
     {
         DisplayCategory = Electronics,
-        Weight  =   0.3,
+        Weight				=	1.2,
         Type    =   Drainable,
         UseWhileEquipped	=	TRUE,
         ActivatedItem	=	TRUE,
@@ -32,9 +36,11 @@ module PhunRad
         DisplayName =   Broken Geiger Counter,
         Icon            = GeigerBroken,
         AttachmentType = Walkie,
-        Tooltip = Tooltip_item_geiger,
+        Tooltip = Tooltip_Broken_Item_Geiger,,
         StaticModel     = WalkieTalkieValue,
         ticksPerEquipUse = 6000,
+        UseDelta			=	0.001,
+        cantBeConsolided = TRUE,
     }
 
     item Iodine {
@@ -47,6 +53,7 @@ module PhunRad
         Icon    =   Iodine,
         Tooltip = Tooltip_Item_Iodine,
         StaticModel = PillBottle,
+        OnEat = OnEat_Iodine,
         Medical = TRUE,
         DaysTotallyRotten   = 4,
         DaysFresh           = 1,

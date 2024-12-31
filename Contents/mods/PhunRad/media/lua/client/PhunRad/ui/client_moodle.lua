@@ -3,44 +3,6 @@ local mf = MF
 local PR = PhunRad
 mf.createMoodle(PR.name)
 
-local radMapping = {{
-    level = 99,
-    value = .1,
-    chevrons = 3
-}, {
-    level = 90,
-    value = .2,
-    chevrons = 2
-}, {
-    level = 80,
-    value = .3,
-    chevrons = 1
-}, {
-    level = 70,
-    value = .4,
-    chevrons = 0
-}, {
-    level = 60,
-    value = .5,
-    chevrons = 0
-}, {
-    level = 50,
-    value = .6,
-    chevrons = 0
-}, {
-    level = 40,
-    value = .7,
-    chevrons = 1
-}, {
-    level = 30,
-    value = .8,
-    chevrons = 2
-}, {
-    level = 20,
-    value = .9,
-    chevrons = 3
-}}
-
 PR.moodles = {}
 local inied = {}
 function PR.moodles:getRadsMoodle(player)
@@ -49,11 +11,21 @@ function PR.moodles:getRadsMoodle(player)
 
     if not inied[tostring(player)] then
 
-        moodle:setThresholds(0.1, 0.4, 0.6, 0.99, 1.1, 1.1, 1.1, 1.1) -- dont show till 99% and its bad?
+        moodle:setThresholds(0.1, 0.4, 0.6, 0.9, 0.9, 0.95, 0.97, 1)
         inied[tostring(player)] = true
     end
 
     return moodle
+end
+
+local function formatNumber(number)
+    number = number or 0
+    -- Round the number to remove the decimal part
+    local roundedNumber = math.floor(number + 0.005)
+    -- Convert to string and format with commas
+    local formattedNumber = tostring(roundedNumber):reverse():gsub("(%d%d%d)", "%1,")
+    formattedNumber = formattedNumber:reverse():gsub("^,", "")
+    return formattedNumber
 end
 
 function PR.moodles:updateRadMoodle(player, data)
@@ -71,32 +43,42 @@ function PR.moodles:updateRadMoodle(player, data)
     if data.rate then
         if data.rate > 0 then
             moodle:setChevronCount(data.rate)
-            moodle:setChevronIsUp(data.rate > 0)
+            moodle:setChevronIsUp(data.rate < 0)
         elseif data.rate < 0 then
             moodle:setChevronCount(math.abs(data.rate))
-            moodle:setChevronIsUp(false)
+            moodle:setChevronIsUp(true)
         else
             moodle:setChevronCount(0)
         end
     else
         moodle:setChevronCount(0)
     end
-    local txt = "Radiation level: " .. PhunTools:formatWholeNumber(pd.rads)
+    local tbl = {}
     if pd.iodineExp then
-        local expin = pd.iodineExp - getGameTime():getWorldAgeHours()
+        table.insert(tbl, getText("IGUI_PhunRad_IodineStrength", PR.settings.IodineStrength))
+        local expin = pd.iodineExp - math.floor(getGameTime():getWorldAgeHours() + 0.005)
         if expin < 0 then
-            txt = txt .. "\nIodine soon"
+            table.insert(tbl, getText("IGUI_PhunRad_IodineExpiresSoon"))
         elseif expin < 2 then
-            txt = txt .. "\nIodine expires in an hour"
+            table.insert(tbl, getText("IGUI_PhunRad_IodineExpiresInAnHour"))
         else
-            txt = txt .. "\nIodine expires in " .. PhunTools:formatWholeNumber(expin) .. " hours"
+            table.insert(tbl, getText("IGUI_PhunRad_IodineExpiresInXHours", expin))
         end
     end
-    local gb = moodle:getGoodBadNeutral()
-    local lvl = moodle:getLevel()
-    moodle:setDescription(gb, lvl, txt)
-    local disable = value > .999 or (not ((pd.rads or 0) > 0 or (pd.rate or 0) > 0))
-    -- print("Disable: " .. tostring(disable) .. " at " .. tostring(1 - data.percent) .. " value=" .. tostring(value))
-    -- moodle.disable = disable
+    if data.activeGeiger then
+        table.insert(tbl, getText("IGUI_PhunRad_YourRadiation", formatNumber(pd.rads)))
+    end
+    if data.itemRads then
+        table.insert(tbl, getText("IGUI_PhunRad_ItemRadiation", formatNumber(data.itemRads)))
+    end
+    if (#(data.clothingProtectionItems or {})) > 0 then
+        table.insert(tbl, getText("IGUI_PhunRad_ClothingProtection", formatNumber(data.clothingProtection)))
+    end
+    for _, v in ipairs(data.clothingProtectionItems or {}) do
+        table.insert(tbl, tostring(v.name) .. ": " .. tostring(v.protection))
+    end
+    moodle:setDescription(moodle:getGoodBadNeutral(), moodle:getLevel(), #tbl > 0 and table.concat(tbl, "\n") or "")
+    moodle.disable = pd.iodineExp == nil
+
 end
 

@@ -24,4 +24,22 @@ Commands[PR.commands.setPlayerRadLevel] = function(args)
     end
 end
 
+Commands[PR.commands.updateVehiclePosition] = function(args)
+    local data = getPlayer():getModData()
+    PR:debug("updateVehiclePosition", args)
+    local vehicle = getVehicleById(args[1] or args.vehicleId)
+    print(tostring(vehicle))
+end
+
+Commands[PR.commands.clientFinishEnterInterior] = function(args)
+    local data = getPlayer():getModData()
+    PR:debug("clientFinishEnterInterior", args)
+end
+
+Commands[PR.commands.clientFinishExitInterior] = function(args)
+    local data = getPlayer():getModData()
+    local car = args and args.vehicleId and getVehicleById(args.vehicleId)
+    PR:debug("clientFinishExitInterior", args)
+end
+
 return Commands

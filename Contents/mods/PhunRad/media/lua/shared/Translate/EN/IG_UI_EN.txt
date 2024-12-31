@@ -1,0 +1,13 @@
+IGUI_EN = {
+
+    IGUI_PhunRad_IodineStrength = "Iodine strength: %1",
+    IGUI_PhunRad_IodineExpiresInXHours = "Iodine expires in %1 hours",
+    IGUI_PhunRad_IodineExpiresInAnHour = "Iodine expires in an hour",
+    IGUI_PhunRad_IodineExpiresSoon = "Iodine expires soon",
+    IGUI_PhunRad_RadiationIntensity = "Radiation Intensity: %1",
+    IGUI_PhunRad_YourRadiation = "Your radiation: %1",
+    IGUI_PhunRad_RemovePlayerRads = "Remove radiation from %1 (%2/%3)",
+    IGUI_PhunRad_Protection = "Radiation Protection:",
+    IGUI_PhunRad_ItemRadiation = "Item radiation: %1"
+
+}
