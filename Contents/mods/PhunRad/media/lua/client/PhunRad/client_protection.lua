@@ -36,9 +36,8 @@ local protectiveClothing = {
 }
 
 local radioactiveItems = {
-    ["Nails"] = 1,
-    ["Base.NUC_Items.NUC_NuclearRod"] = 20,
-    ["Base.NUC_Items.NUC_Waste"] = 30
+    ["NUC_NuclearRod"] = 20,
+    ["NUC_Waste"] = 30
 }
 
 local function getItemProtection(item)

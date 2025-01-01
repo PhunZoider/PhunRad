@@ -62,7 +62,7 @@ function PR.moodles:updateRadMoodle(player, data)
         elseif expin < 2 then
             table.insert(tbl, getText("IGUI_PhunRad_IodineExpiresInAnHour"))
         else
-            table.insert(tbl, getText("IGUI_PhunRad_IodineExpiresInXHours", expin))
+            table.insert(tbl, getText("IGUI_PhunRad_IodineExpiresInXHours", formatNumber(expin, true)))
         end
     end
     if data.activeGeiger then
@@ -75,7 +75,7 @@ function PR.moodles:updateRadMoodle(player, data)
         table.insert(tbl, getText("IGUI_PhunRad_ClothingProtection", formatNumber(data.clothingProtection)))
     end
     for _, v in ipairs(data.clothingProtectionItems or {}) do
-        table.insert(tbl, tostring(v.name) .. ": " .. tostring(v.protection))
+        table.insert(tbl, " - " .. tostring(v.name) .. ": " .. tostring(v.protection))
     end
     moodle:setDescription(moodle:getGoodBadNeutral(), moodle:getLevel(), #tbl > 0 and table.concat(tbl, "\n") or "")
     moodle.disable = pd.iodineExp == nil

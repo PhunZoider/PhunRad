@@ -9,5 +9,5 @@ IGUI_EN = {
     IGUI_PhunRad_RemovePlayerRads = "Remove radiation from %1 (%2/%3)",
     IGUI_PhunRad_Protection = "Radiation Protection:",
     IGUI_PhunRad_ItemRadiation = "Item radiation: %1"
-
+    IGUI_PhunRad_ClothingProtection = "Clothing Protection: %1"
 }
