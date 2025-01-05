@@ -57,7 +57,7 @@ function PR:getRadioactiveItems(player)
         -- inventory not updated since last calculation so just use that
         return data.items or {}, data.itemRads or 0
     end
-    print("=> Calculating Radioactive Items")
+    -- print("=> Calculating Radioactive Items")
     -- get all items in surrounding containers
     local loot = getPlayerLoot(player:getPlayerNum())
     local radiatedItems = {}

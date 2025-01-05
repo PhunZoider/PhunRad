@@ -15,7 +15,7 @@ table.insert(ProceduralDistributions.list["ArmySurplusTools"].items, 1);
 table.insert(ProceduralDistributions.list["ArmyStorageMedical"].items, "PhunRad.BrokenGeigerCounter");
 table.insert(ProceduralDistributions.list["ArmyStorageMedical"].items, 1);
 table.insert(ProceduralDistributions.list["ArmyStorageMedical"].items, "PhunRad.Iodine");
-table.insert(ProceduralDistributions.list["ArmyStorageMedical"].items, 1);
+table.insert(ProceduralDistributions.list["ArmyStorageMedical"].items, 2);
 
 -- ArmySurplusOutfit
 table.insert(ProceduralDistributions.list["ArmySurplusOutfit"].items, "PhunRad.GeigerCounter");
@@ -33,11 +33,11 @@ table.insert(ProceduralDistributions.list["ArmySurplusMisc"].items, 1);
 
 -- DrugLabSupplies
 table.insert(ProceduralDistributions.list["DrugLabSupplies"].items, "PhunRad.Iodine");
-table.insert(ProceduralDistributions.list["DrugLabSupplies"].items, 5);
+table.insert(ProceduralDistributions.list["DrugLabSupplies"].items, 2);
 
 -- DrugShackDrugs
 table.insert(ProceduralDistributions.list["DrugShackDrugs"].items, "PhunRad.Iodine");
-table.insert(ProceduralDistributions.list["DrugShackDrugs"].items, 1);
+table.insert(ProceduralDistributions.list["DrugShackDrugs"].items, 2);
 
 -- ElectronicStoreAppliances
 table.insert(ProceduralDistributions.list["ElectronicStoreAppliances"].items, "PhunRad.BrokenGeigerCounter");
@@ -51,13 +51,13 @@ table.insert(ProceduralDistributions.list["ElectronicStoreMisc"].items, 2);
 table.insert(ProceduralDistributions.list["FireDeptLockers"].items, "PhunRad.BrokenGeigerCounter");
 table.insert(ProceduralDistributions.list["FireDeptLockers"].items, 1);
 table.insert(ProceduralDistributions.list["FireDeptLockers"].items, "PhunRad.Iodine");
-table.insert(ProceduralDistributions.list["FireDeptLockers"].items, 0.05);
+table.insert(ProceduralDistributions.list["FireDeptLockers"].items, 0.5);
 
 -- LockerArmyBedroom
 table.insert(ProceduralDistributions.list["LockerArmyBedroom"].items, "PhunRad.GeigerCounter");
 table.insert(ProceduralDistributions.list["LockerArmyBedroom"].items, 1);
 table.insert(ProceduralDistributions.list["LockerArmyBedroom"].items, "PhunRad.Iodine");
-table.insert(ProceduralDistributions.list["LockerArmyBedroom"].items, 1);
+table.insert(ProceduralDistributions.list["LockerArmyBedroom"].items, 1.5);
 
 -- MedicalStorageDrugs
 table.insert(ProceduralDistributions.list["MedicalStorageDrugs"].items, "PhunRad.Iodine");
