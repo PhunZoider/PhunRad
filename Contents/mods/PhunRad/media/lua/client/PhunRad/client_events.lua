@@ -94,10 +94,15 @@ Events.OnClothingUpdated.Add(function(player)
     end
 end)
 
--- Events.OnRefreshInventoryWindowContainers.Add(function(invSelf, state)
--- 	local playerObj = getSpecificPlayer(invSelf.player)
--- 	self:getRadioactiveItems(playerObj)
--- end)
+local nextCheck = getTimestamp() + 5
+Events.OnRefreshInventoryWindowContainers.Add(function(invSelf, state)
+    if state == "end" and (PR.settings.RadiatedItemFrequency or getTimestamp()) > 0 and nextCheck < getTimestamp() then
+        nextCheck = getTimestamp() + PR.settings.RadiatedItemFrequency
+        local playerObj = getSpecificPlayer(invSelf.player)
+        PR:getRadioactiveItems(playerObj)
+    end
+
+end)
 
 Events.OnRainStart.Add(function(a, b, c)
     print("=> OnRainStart ", tostring(a), tostring(b), tostring(c))

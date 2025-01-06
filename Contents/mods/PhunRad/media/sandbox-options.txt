@@ -77,3 +77,13 @@ option PhunRad.GeigerMustBeEquippedToHear
     page = PhunRad,
     translation = PhunRadGeigerMustBeEquippedToHear,
 }
+
+option PhunRad.RadiatedItemFrequency
+{
+    type = integer, 
+    default = 5, 
+    min = 0,
+    max = 99999,
+    page = PhunRad,
+    translation = PhunRad_RadiatedItemFrequency,
+}

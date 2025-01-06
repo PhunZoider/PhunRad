@@ -62,6 +62,12 @@ function PR:getRadioactiveItems(player)
     local loot = getPlayerLoot(player:getPlayerNum())
     local radiatedItems = {}
     local radiatedLevels = 0
+
+    if not loot or not loot.inventoryPane or not loot.inventoryPane.inventoryPage or
+        not loot.inventoryPane.inventoryPage.backpacks then
+        return radiatedItems, radiatedLevels
+    end
+
     local containers = loot.inventoryPane.inventoryPage.backpacks
     local itemList = ArrayList.new();
     for k, v in pairs(containers) do
