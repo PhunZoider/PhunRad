@@ -47,12 +47,92 @@ function PR:updateGeigerCounterSound(player)
     end
 end
 
+function PR:recalcDeferredContainers(containers)
+
+    for k, v in pairs(containers) do
+        print("=> recalcDeferredContainers ", tostring(k), tostring(v))
+        local container = k
+        if container then
+
+            local parent = container:getParent()
+            -- local modData = container.getModData and container:getModData()
+
+            -- if not modData and not parent then
+            --     -- assert we use floor?
+            --     local sourceGrid = container:getSourceGrid()
+            --     modData = sourceGrid:getModData()
+            -- elseif not modData then
+            --     modData = container:getParent():getModData()
+            -- end
+
+            local item, levels = PR:getRadioactiveLevelForContainer(container)
+
+            if parent then
+                if instanceof(parent, "IsoPlayer") then
+                    local existing = parent:getModData().itemRads or 0
+                    local newTotal = existing + levels
+                    parent:getModData().itemRads = newTotal
+                    local name = parent:getUsername()
+                    self.data.players[name] = self.data.players[name] or {}
+                    self.data.players[name].itemRads = parent:getModData().itemRads
+
+                else
+                    local str = parent:getX() .. "," .. parent:getY() .. "," .. parent:getZ()
+                    local md = parent:getModData()
+                    if levels > 0 then
+
+                        local entry = self.data[str] or 0
+                        self.data[str] = entry + levels
+                    else
+                        self.data[str] = nil
+                    end
+                end
+            elseif container.type == "floor" then
+                print("floor")
+            else
+                local md2 = container:getModData()
+                local t = container.type
+
+                print(tostring(md2) .. t)
+                print("=> recalcDeferredContainers ", tostring(container), tostring(item), tostring(levels))
+
+            end
+
+            -- -- local inv = container.inventoryContainer
+            -- -- print(tostring(inv))
+
+            -- -- local count = container.getContainerCount and container:getContainerCount()
+            -- -- local con = container.getItemContainer and container:getItemContainer()
+            -- -- local modData = container.getModData and container:getModData()
+            -- -- if container:getParent() and container:getParent().getModData then
+            -- --     modData = container:getParent():getModData()
+            -- -- end
+
+            -- modData.radlevel = levels
+        end
+        containers[k] = nil
+    end
+
+end
+
+function PR:recalcDeferredClothingUpdates(players)
+
+    for k, v in pairs(players) do
+        local player = k
+        print("Recalculating " .. player:getUsername() .. " clothing protection")
+        self:updatePlayersClothingProtection(player)
+        self:updatePlayer(player)
+        players[k] = nil
+    end
+end
+
 function PR:updatePlayer(player)
 
     if gt == nil then
         gt = GameTime:getInstance()
     end
 
+    local modData = player:getModData()
     local data = self:getPlayerData(player)
     local lastLevel = data.lastLevel or 0 -- last strength of radiation affecting player
     local currentLevel = data.radLevel or 0 -- strength of radiation affecting player
@@ -79,8 +159,8 @@ function PR:updatePlayer(player)
 
     local adjustedLevel = currentLevel
 
-    local radItems, itemRadAdj = self:getRadioactiveItems(player)
-    adjustedLevel = adjustedLevel + itemRadAdj
+    -- local radItems, itemRadAdj = self:getRadioactiveItems(player)
+    adjustedLevel = adjustedLevel + (data.itemRads or 0)
 
     if data.iodineExp then
         adjustedLevel = currentLevel - self.settings.IodineStrength

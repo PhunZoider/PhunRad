@@ -6,32 +6,32 @@ local PR = PhunRad
 local protectiveClothing = {
     ["HazmatGloves"] = 20,
 
-    ["HazmatSuit"] = 100,
-    ["HazmatSuit2"] = 100,
-    ["MysteriousHazmat"] = 100,
+    ["HazmatSuit"] = 50,
+    ["HazmatSuit2"] = 50,
+    ["MysteriousHazmat"] = 50,
 
-    ["CEDAHazmatSuit"] = 100,
-    ["CEDAHazmatSuitRed"] = 100,
-    ["CEDAHazmatSuitBlue"] = 100,
-    ["CEDAHazmatSuitBlack"] = 100,
+    ["CEDAHazmatSuit"] = 50,
+    ["CEDAHazmatSuitRed"] = 50,
+    ["CEDAHazmatSuitBlue"] = 50,
+    ["CEDAHazmatSuitBlack"] = 50,
 
-    ["HazmatSuit2NoMask"] = 75,
-    ["HazmatSuitCEDANoMask"] = 75,
-    ["CEDAHazmatSuitBlackNoMask"] = 75,
-    ["CEDAHazmatSuitRedNoMask"] = 75,
-    ["CEDAHazmatSuitBlueNoMask"] = 75,
+    ["HazmatSuit2NoMask"] = 35,
+    ["HazmatSuitCEDANoMask"] = 35,
+    ["CEDAHazmatSuitBlackNoMask"] = 35,
+    ["CEDAHazmatSuitRedNoMask"] = 35,
+    ["CEDAHazmatSuitBlueNoMask"] = 35,
 
-    ["HazmatSuit2NoShoes"] = 75,
-    ["HazmatSuitCEDANoShoes"] = 75,
-    ["CEDAHazmatSuitBlackNoShoes"] = 75,
-    ["CEDAHazmatSuitRedNoShoes"] = 75,
-    ["CEDAHazmatSuitBlueNoShoes"] = 75,
+    ["HazmatSuit2NoShoes"] = 35,
+    ["HazmatSuitCEDANoShoes"] = 35,
+    ["CEDAHazmatSuitBlackNoShoes"] = 35,
+    ["CEDAHazmatSuitRedNoShoes"] = 35,
+    ["CEDAHazmatSuitBlueNoShoes"] = 35,
 
-    ["HazmatSuit2NoMaskNoShoes"] = 50,
-    ["HazmatSuitCEDANoMaskNoShoes"] = 50,
-    ["CEDAHazmatSuitBlackNoMaskNoShoes"] = 50,
-    ["CEDAHazmatSuitRedNoMaskNoShoes"] = 50,
-    ["CEDAHazmatSuitBlueNoMaskNoShoes"] = 50
+    ["HazmatSuit2NoMaskNoShoes"] = 25,
+    ["HazmatSuitCEDANoMaskNoShoes"] = 25,
+    ["CEDAHazmatSuitBlackNoMaskNoShoes"] = 25,
+    ["CEDAHazmatSuitRedNoMaskNoShoes"] = 25,
+    ["CEDAHazmatSuitBlueNoMaskNoShoes"] = 25
 
 }
 
@@ -48,6 +48,26 @@ local function getItemProtection(item)
     local itemProtection = ((PR.settings.HazmatStrength or 100) * .01) * (protectiveClothing[item:getType()] or 50)
     return itemProtection -
                (itemProtection * ((item:getHolesNumber() or 0) * ((PR.settings.HazmatStrengthLossPerHole or 20) * .01)))
+end
+
+function PR:getRadioactiveLevelForContainer(container)
+    local radiatedItems = {}
+    local radiatedLevels = 0
+    for k, v in pairs(radioactiveItems) do
+        local items = container:getItemsFromType(k)
+        if items:size() > 0 then
+            if not radiatedItems[k] then
+                radiatedItems[k] = {
+                    count = 0,
+                    level = 0
+                }
+            end
+            radiatedItems[k].count = radiatedItems[k].count + items:size()
+            radiatedItems[k].level = radiatedItems[k].level + (items:size() * v)
+            radiatedLevels = radiatedLevels + (items:size() * v)
+        end
+    end
+    return radiatedItems, radiatedLevels
 end
 
 function PR:getRadioactiveItems(player)
@@ -174,7 +194,6 @@ function PR:updatePlayersClothingProtection(player)
                 data.activeGeiger = true
                 break
             end
-
         end
     end
     return data.clothingProtection

@@ -10,7 +10,6 @@ module PhunRad
         DisplayCategory = Electronics,
         Weight  =   0.3,
         Type    =   Drainable,
-        ActivatedItem	=	TRUE,
         KeepOnDeplete = TRUE,
         DisplayName =   Geiger Counter,
         UsesBattery		= TRUE,
@@ -22,7 +21,7 @@ module PhunRad
         StaticModel     = WalkieTalkieValue,
         ticksPerEquipUse = 6000,
         cantBeConsolided = TRUE,
-        UseDelta			=	0.001,
+        UseDelta			=	0.1,
     }
 
     item BrokenGeigerCounter
@@ -39,7 +38,7 @@ module PhunRad
         Tooltip = Tooltip_Broken_Item_Geiger,,
         StaticModel     = WalkieTalkieValue,
         ticksPerEquipUse = 6000,
-        UseDelta			=	0.001,
+        UseDelta			=	0.01,
         cantBeConsolided = TRUE,
     }
 
