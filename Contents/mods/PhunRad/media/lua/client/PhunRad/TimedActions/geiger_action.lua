@@ -1,3 +1,4 @@
+local PR = PhunRad;
 require "TimedActions/ISBaseTimedAction"
 
 ISGeigerAction = ISBaseTimedAction:derive("ISGeigerAction")
@@ -12,8 +13,8 @@ function ISGeigerAction.get(player, device)
         end
     end
 
-    local instance = ISTimedActionQueue.add(ISGeigerAction:new(
-                        isActivated and "ToggleOff" or "ToggleOn", player, device))
+    local instance = ISTimedActionQueue.add(
+        ISGeigerAction:new(isActivated and "ToggleOff" or "ToggleOn", player, device))
 
     table.insert(ISGeigerAction.instances, instance)
 
@@ -27,10 +28,6 @@ function ISGeigerAction:toggle(player, device)
         table.insert(ISGeigerAction.instances, instance)
     end
 
-end
-
-local function autoStop(instance, id)
-    print(tostring(instance) .. tostring(id))
 end
 
 function ISGeigerAction:isValid()
@@ -69,6 +66,23 @@ function ISGeigerAction:performToggleOn()
             self.character:playSound("TelevisionOn")
         end
         self.device:setActivated(true);
+        local data = PR:getPlayerData(self.character)
+        data.activeGeiger = true
+        PR:updateGeigerCounterSound(self.character)
+
+        local function autoStop()
+            local s = self;
+            local d = s.device;
+            if d:getDelta() <= 0 or not d:isActivated() then
+                Events.EveryOneMinute.Remove(autoStop)
+                local data = PR:getPlayerData(s.character)
+                data.activeGeiger = false
+                PR:updateGeigerCounterSound(s.character)
+                d:setActivated(false)
+                return
+            end
+            print(tostring(s) .. tostring(d))
+        end
         Events.EveryOneMinute.Add(autoStop)
     end
 end
@@ -86,7 +100,6 @@ function ISGeigerAction:performToggleOff()
             self.character:playSound("TelevisionOff")
         end
         self.device:setActivated(false)
-        Events.EveryOneMinute.Remove(autoStop)
     end
 end
 

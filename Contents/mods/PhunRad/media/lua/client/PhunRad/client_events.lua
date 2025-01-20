@@ -102,12 +102,13 @@ Events.OnFillInventoryObjectContextMenu.Add(function(playerNum, context, items)
                     local instance = ISTimedActionQueue.add(ISGeigerAction:new(
                         isActivated and "ToggleOff" or "ToggleOn", playerObj, item))
 
-                    local fn = function()
-                        if instance then
-                            instance:stop()
-                        end
-                    end
-                    Events.EveryOneMinute.Add(fn)
+                    -- local fn = function()
+                    --     print("=> fn!")
+                    --     if instance and instance.stop then
+                    --         instance:stop()
+                    --     end
+                    -- end
+                    -- Events.EveryOneMinute.Add(fn)
                     -- item:setActivated(not isActivated)
                     -- playerObj:playSound(isActivated and "TelevisionOff" or "TelevisionOn")
                     -- playerObj:getModData().PhunRad.activeGeiger = not isActivated

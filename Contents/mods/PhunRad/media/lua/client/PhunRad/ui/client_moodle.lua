@@ -49,7 +49,7 @@ local function getDescription(player, goodBadNeutral, moodleLevel)
         local isActivated = item:isActivated()
         if isActivated then
             item:Use()
-            if not self.settings.GeigerMustBeEquippedToHear or (item:isEquipped() or item:getAttachedSlot() > 0) then
+            if not PR.settings.GeigerMustBeEquippedToHear or (item:isEquipped() or item:getAttachedSlot() > 0) then
                 hasGeiger = true
                 break
             end

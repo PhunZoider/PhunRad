@@ -145,16 +145,16 @@ end
 --     return result
 -- end
 
-local old_ISInventoryPaneContextMenu_getContainers = ISInventoryPaneContextMenu.getContainers
-ISInventoryPaneContextMenu.getContainers = function(character)
-    print("=> ISInventoryPaneContextMenu.getContainers()")
-    local containerList = old_ISInventoryPaneContextMenu_getContainers(character)
-    -- local localContainer = ISInventoryPage.GetLocalContainer(character:getPlayerNum())
-    -- -- If ProxInv is enabled:
-    -- containerList:remove(localContainer);
+-- local old_ISInventoryPaneContextMenu_getContainers = ISInventoryPaneContextMenu.getContainers
+-- ISInventoryPaneContextMenu.getContainers = function(character)
+--     print("=> ISInventoryPaneContextMenu.getContainers()")
+--     local containerList = old_ISInventoryPaneContextMenu_getContainers(character)
+--     -- local localContainer = ISInventoryPage.GetLocalContainer(character:getPlayerNum())
+--     -- -- If ProxInv is enabled:
+--     -- containerList:remove(localContainer);
 
-    return containerList;
-end
+--     return containerList;
+-- end
 
 function PR:updatePlayersClothingProtection(player)
 

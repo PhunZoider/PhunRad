@@ -1,0 +1,46 @@
+{
+    "emeraldwalk.runonsave": {
+        "autoClearConsole": true,
+        "commands": [
+            {
+                "match": ".*",
+                "cmd": "rmdir /S /Q ${env.USERPROFILE}\\Zomboid\\mods\\PhunRad 2>nul"
+            },
+            {
+                "match": ".*",
+                "cmd": "xcopy ${workspaceFolder}\\Contents\\mods ${env.USERPROFILE}\\Zomboid\\mods /Y /I /E /F /EXCLUDE:xclude"
+            },
+            {
+                "match": ".*",
+                "cmd": "xcopy ${workspaceFolder}\\Contents\\mods\\PhunRad\\media ${env.USERPROFILE}\\Zomboid\\mods\\PhunRad\\42\\media /Y /I /E /F"
+            },
+            {
+                "match": ".*",
+                "cmd": "copy ${workspaceFolder}\\Contents\\mods\\PhunRad\\mod.info ${env.USERPROFILE}\\Zomboid\\mods\\PhunRad\\42\\mod.info /Y"
+            },
+            {
+                "match": ".*",
+                "cmd": "copy ${workspaceFolder}\\Contents\\mods\\PhunRad\\poster.png ${env.USERPROFILE}\\Zomboid\\mods\\PhunRad\\42\\poster.png /Y"
+            },
+            {
+                "match": ".*",
+                "cmd": "copy ${workspaceFolder}\\Contents\\mods\\PhunRad\\icon.png ${env.USERPROFILE}\\Zomboid\\mods\\PhunRad\\42\\icon.png /Y"
+            },
+            {
+                "match": ".*",
+                "cmd": "rmdir /S /Q ${env.USERPROFILE}\\Zomboid\\Workshop\\PhunRad 2>nul"
+            },
+            {
+                "match": ".*",
+                "cmd": "xcopy ${workspaceFolder} ${env.USERPROFILE}\\Zomboid\\Workshop\\PhunRad /Y /I /E /F /EXCLUDE:xclude"
+            },
+            {
+                "match": ".*",
+                "cmd": "xcopy ${env.USERPROFILE}\\Zomboid\\mods\\PhunRad ${env.USERPROFILE}\\Zomboid\\Workshop\\PhunRad\\Contents\\mods\\PhunRad /Y /I /E /F"
+            },
+        ]
+    },
+    "editor.formatOnSave": true,
+    "github.gitAuthentication": true,
+    "github.gitProtocol": "ssh"
+}
