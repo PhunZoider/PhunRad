@@ -1,6 +1,6 @@
 title=PhunRad
 name=PhunRad
 id=phunrad
-requires=phunzones
+requires=phunzones;MoodleFramework
 description=Phun with Radiation
 poster=poster.png

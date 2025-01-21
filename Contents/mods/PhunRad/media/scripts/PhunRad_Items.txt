@@ -21,7 +21,7 @@ module PhunRad
         StaticModel     = WalkieTalkieValue,
         ticksPerEquipUse = 6000,
         cantBeConsolided = TRUE,
-        UseDelta			=	0.01,
+        UseDelta			=	0.001,
     }
 
     item BrokenGeigerCounter

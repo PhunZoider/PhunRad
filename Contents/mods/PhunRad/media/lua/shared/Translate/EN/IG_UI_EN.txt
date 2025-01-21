@@ -9,5 +9,7 @@ IGUI_EN = {
     IGUI_PhunRad_RemovePlayerRads = "Remove radiation from %1 (%2/%3)",
     IGUI_PhunRad_Protection = "Radiation Protection:",
     IGUI_PhunRad_ItemRadiation = "Item radiation: %1"
-    IGUI_PhunRad_ClothingProtection = "Clothing Protection: %1"
+    IGUI_PhunRad_ClothingProtection = "Clothing Protection: %1",
+    IGUI_PhunRad_Rads = "Rads",
+    IGUI_PhunRad_Rads_tooltip = "Radiation strength in this zone. Primarily for use with PhunRad mod, though I suppose any mod could use it.",
 }

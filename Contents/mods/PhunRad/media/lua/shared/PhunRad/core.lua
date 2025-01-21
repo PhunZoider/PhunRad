@@ -1,3 +1,6 @@
+require "PhunZones/core"
+local PZ = PhunZones
+
 PhunRad = {
     inied = false,
     name = "PhunRad",
